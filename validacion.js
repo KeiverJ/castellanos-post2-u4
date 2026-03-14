@@ -113,3 +113,35 @@ document.querySelector("#telefono").addEventListener("blur", validarTelefono);
 document.querySelector("#confirmar").addEventListener("input", () => {
   if (document.querySelector("#confirmar").value) limpiarError("confirmar");
 });
+
+// ─── Manejo del envío───────────────────────────────────────────────────
+const form = document.querySelector("#form-registro");
+form.addEventListener("submit", (e) => {
+  e.preventDefault(); // Siempre prevenir el envío por defecto
+  // Ejecutar todas las validaciones
+  const resultados = [
+    validarNombre(),
+    validarEmail(),
+    validarPassword(),
+    validarConfirmar(),
+    validarTelefono(),
+  ];
+  const todoValido = resultados.every((r) => r === true);
+  if (todoValido) {
+    // Mostrar mensaje de éxito
+    const mensajeExito = document.querySelector("#mensaje-exito");
+    mensajeExito.classList.remove("oculto");
+    mensajeExito.classList.add("visible");
+    // Limpiar formulario después de 2 segundos
+    setTimeout(() => {
+      form.reset();
+      limpiarTodo();
+      mensajeExito.classList.remove("visible");
+      mensajeExito.classList.add("oculto");
+    }, 2000);
+  } else {
+    // Enfocar el primer campo con error
+    const primerInvalido = form.querySelector(".invalido");
+    if (primerInvalido) primerInvalido.focus();
+  }
+});
